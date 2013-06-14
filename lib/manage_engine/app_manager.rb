@@ -1,4 +1,5 @@
-require "manage_engine/app_manager/version"
+require File.expand_path(File.dirname(__FILE__) + '/app_manager/version')
+require File.expand_path(File.dirname(__FILE__) + '/app_manager/server')
 
 module ManageEngine
   module AppManager
@@ -15,8 +16,8 @@ module ManageEngine
       #   ManageEngine::AppManager.new :host => 'http://myHost.internal.com', :port => 9090
       #
       # Returns a ManageEngine::AppManager::Instance.
-      def new(host, port, ssl = false, options = nil)
-        ManageEngine::AppManager::Instance.new(host, port, ssl, options)
+      def new(host, port, options = nil)
+        @server = ManageEngine::AppManager::Server.new host, port, options
       end
     end
   end
