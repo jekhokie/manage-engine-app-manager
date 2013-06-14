@@ -11,31 +11,41 @@ describe ManageEngine::AppManager do
     describe "attributes" do
       let(:manager_server) { FactoryGirl.build :server }
 
-      it { manager_server.should respond_to(:host) }
-      it { manager_server.should respond_to(:port) }
+      it { manager_server.should respond_to(:host)    }
+      it { manager_server.should respond_to(:port)    }
+      it { manager_server.should respond_to(:api_key) }
     end
 
     describe "valid?" do
       it "returns true for valid attributes" do
-        FactoryGirl.build(:server).should be_valid
+        expect { FactoryGirl.build(:server) }.to_not raise_error
       end
 
       # host
       it "returns false for a missing host" do
-        FactoryGirl.build(:server, :host => "").should_not be_valid
+        expect{ FactoryGirl.build(:server, :host => "") }.to raise_error
       end
 
       # port
       it "returns false for a missing port" do
-        FactoryGirl.build(:server, :port => "").should_not be_valid
+        expect{ FactoryGirl.build(:server, :port => "") }.to raise_error
       end
 
       it "returns true for a port of type String" do
-        FactoryGirl.build(:server, :port => "8080").should be_valid
+        expect{ FactoryGirl.build(:server, :port => "8080") }.to_not raise_error
+      end
+
+      it "returns false for an invalid port of type String" do
+        expect{ FactoryGirl.build(:server, :port => "abc") }.to raise_error
       end
 
       it "returns false for a port outside of acceptable range 1-65535" do
-        FactoryGirl.build(:server, :port => 70000).should_not be_valid
+        expect{ FactoryGirl.build(:server, :port => 70000) }.to raise_error
+      end
+
+      # api_key
+      it "returns false for a missing api_key" do
+        expect{ FactoryGirl.build(:server, :api_key => "") }.to raise_error
       end
     end
   end
