@@ -56,6 +56,10 @@ describe ManageEngine::AppManager do
       it "raises error for an unspecified api_version" do
         expect{ FactoryGirl.build(:server, :api_version => "") }.to raise_error
       end
+
+      it "raises error for an unsupported api_version" do
+        expect{ FactoryGirl.build(:server, :api_version => "X") }.to raise_error
+      end
     end
   end
 end
