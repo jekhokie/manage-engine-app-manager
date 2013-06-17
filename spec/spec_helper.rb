@@ -1,5 +1,9 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
+# Simplecov test coverage tool
+require 'simplecov'
+SimpleCov.start
+
 require 'factory_girl'
 require File.expand_path(File.dirname(__FILE__) + '/../lib/manage_engine/app_manager')
 
