@@ -22,12 +22,12 @@ describe ManageEngine::AppManager do
       end
 
       # host
-      it "returns false for a missing host" do
+      it "raises error for a missing host" do
         expect{ FactoryGirl.build(:server, :host => "") }.to raise_error
       end
 
       # port
-      it "returns false for a missing port" do
+      it "raises error for a missing port" do
         expect{ FactoryGirl.build(:server, :port => "") }.to raise_error
       end
 
@@ -35,17 +35,26 @@ describe ManageEngine::AppManager do
         expect{ FactoryGirl.build(:server, :port => "8080") }.to_not raise_error
       end
 
-      it "returns false for an invalid port of type String" do
+      it "raises error for an invalid port of type String" do
         expect{ FactoryGirl.build(:server, :port => "abc") }.to raise_error
       end
 
-      it "returns false for a port outside of acceptable range 1-65535" do
+      it "raises error for a port outside of acceptable range 1-65535" do
         expect{ FactoryGirl.build(:server, :port => 70000) }.to raise_error
       end
 
       # api_key
-      it "returns false for a missing api_key" do
+      it "raises error for a missing api_key" do
         expect{ FactoryGirl.build(:server, :api_key => "") }.to raise_error
+      end
+
+      # api_version
+      it "returns true for a valid api_version" do
+        expect{ FactoryGirl.build(:server, :api_version => "11") }.to_not raise_error
+      end
+
+      it "raises error for an unspecified api_version" do
+        expect{ FactoryGirl.build(:server, :api_version => "") }.to raise_error
       end
     end
   end
