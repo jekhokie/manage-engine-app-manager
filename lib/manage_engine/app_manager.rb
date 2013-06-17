@@ -8,8 +8,8 @@ module ManageEngine
       #
       # host    - Host on which the ApplicationsManager server is running.
       # port    - Optional port on which the ApplicationsManager is listening (default = 9090).
-      # ssl     - Optional boolean indicating whether the server is listening using http-secure (default = false).
       # options - Optional hash used to configure this ManageEngine::AppManager::Instance (default = nil).
+      #             :api_version - Version of the AppManager API to use (drives the schema)
       #
       # Examples
       #
@@ -17,7 +17,7 @@ module ManageEngine
       #
       # Returns a ManageEngine::AppManager::Instance.
       def new(args = nil)
-        @server = ManageEngine::AppManager::Server.new args
+        ManageEngine::AppManager::Server.new args
       end
     end
   end
