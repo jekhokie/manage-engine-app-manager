@@ -1,15 +1,16 @@
 module ManageEngine
   module AppManager
     class Server
-      attr_accessor :host, :port, :api_key, :api_version
+      attr_accessor :host, :port, :api_key
+      attr_reader   :api_version, :api
 
       DEFAULT_PORT        = 9090
       DEFAULT_API_VERSION = "11"
 
       def initialize(args)
         # initialize default attributes
-        self.port        = DEFAULT_PORT
-        self.api_version = DEFAULT_API_VERSION
+        self.port    = DEFAULT_PORT
+        @api_version = DEFAULT_API_VERSION
 
         # assign overrideable attributes
         unless args.nil?
@@ -18,8 +19,15 @@ module ManageEngine
           self.api_key     = args[:api_key] ? args[:api_key].to_s : nil
 
           unless (extra_opts = args[:opts]).nil?
-            self.api_version = extra_opts[:api_version].to_s if extra_opts[:api_version]
+            @api_version = extra_opts[:api_version].to_s if extra_opts[:api_version]
           end
+        end
+
+        begin
+          # build a new API object
+          @api = ManageEngine::AppManager::Api.new(@api_version)
+        rescue Exception => e
+          raise e.message
         end
 
         self.valid?
@@ -32,9 +40,19 @@ module ManageEngine
                                                                                      self.port.to_s == ""
         raise ":port not within range 1 < :port < 65535" if self.port.nil?        or self.port > 65535 or
                                                                                      self.port < 1
-        raise ":api_version cannot be blank"             if self.api_version.nil? or self.api_version.to_s == ""
+        raise ":api_version cannot be blank"             if @api_version.nil? or @api_version.to_s == ""
 
         true
+      end
+
+      def api_version=(api_version)
+        begin
+          # build a new API object
+          @api         = ManageEngine::AppManager::Api.new(api_version)
+          @api_version = api_version
+        rescue Exception => e
+          raise e.message
+        end
       end
     end
   end
