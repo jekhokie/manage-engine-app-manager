@@ -60,4 +60,26 @@ describe ManageEngine::AppManager::Server do
       expect{ FactoryGirl.build(:server, :api_version => "X") }.to raise_error
     end
   end
+
+  describe "api_version" do
+    before :each do
+      @manage_server = FactoryGirl.build :server
+    end
+
+    it "assigns the corresponding API version when the version exists" do
+      @manage_server.api_version = "11"
+      @manage_server.api_version.should == "11"
+    end
+
+    it "raises error when the version does not exist" do
+      expect{ @manage_server.api_version=("13") }.to raise_error
+    end
+
+    it "retains the previous version when a specified version does not exist" do
+      @manage_server.stub('api_version=').and_return true
+
+      @manage_server.api_version = "13"
+      @manage_server.api_version.should == "11"
+    end
+  end
 end
