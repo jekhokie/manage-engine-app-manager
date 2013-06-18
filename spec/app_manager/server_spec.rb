@@ -82,4 +82,14 @@ describe ManageEngine::AppManager::Server do
       @manage_server.api_version.should == "11"
     end
   end
+
+  describe "root_url" do
+    let(:host)           { "my.host" }
+    let(:port)           { "9001" }
+    let(:manager_server) { FactoryGirl.build :server, :host => host, :port => port }
+
+    it "returns the root url for the location of the AppManager service" do
+      manager_server.root_url.should == "http://#{host}:#{port}/"
+    end
+  end
 end
