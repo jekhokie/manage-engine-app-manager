@@ -54,6 +54,10 @@ module ManageEngine
           raise e.message
         end
       end
+
+      def root_url
+        "http://#{self.host}:#{self.port}/"
+      end
     end
   end
 end
