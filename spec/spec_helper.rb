@@ -4,6 +4,9 @@
 require 'simplecov'
 SimpleCov.start
 
+# Include the Fakeweb web mock framework
+require 'fakeweb'
+
 require 'factory_girl'
 require File.expand_path(File.dirname(__FILE__) + '/../lib/manage_engine/app_manager')
 
