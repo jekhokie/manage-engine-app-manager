@@ -8,7 +8,7 @@ SimpleCov.start
 require 'fakeweb'
 
 require 'factory_girl'
-require File.expand_path(File.dirname(__FILE__) + '/../lib/manage_engine/app_manager')
+require_relative '../lib/manage_engine/app_manager'
 
 # Auto-discover Factories
 FactoryGirl.find_definitions
