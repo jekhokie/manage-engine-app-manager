@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 require_relative 'app_manager/version'
 require_relative 'app_manager/server'
 require_relative 'app_manager/api'
