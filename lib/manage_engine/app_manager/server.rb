@@ -88,6 +88,10 @@ module ManageEngine
           raise e.message
         end
       end
+
+      def all_hosts
+        self.all_hosts_services.keys
+      end
     end
   end
 end
