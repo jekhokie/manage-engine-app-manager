@@ -131,7 +131,7 @@ describe ManageEngine::AppManager::Server do
     end
   end
 
-  describe "all_hosts" do
+  describe "all_hosts_services" do
     let(:host)           { "my.host" }
     let(:port)           { "9001" }
     let(:api_key)        { "abc123" }
@@ -145,8 +145,8 @@ describe ManageEngine::AppManager::Server do
       end
 
       it "returns a hash of service arrays" do
-        manager_server.all_hosts.should == { "test-vm.local.host"  => [ "Service Monitoring", "Tomcat", "Tomcat", "JBoss", "PostgreSQL" ],
-                                             "test2-vm.local.host" => [ "Service Monitoring", "Tomcat", "PostgreSQL" ] }
+        manager_server.all_hosts_services.should == { "test-vm.local.host"  => [ "Service Monitoring", "Tomcat", "Tomcat", "JBoss", "PostgreSQL" ],
+                                                      "test2-vm.local.host" => [ "Service Monitoring", "Tomcat", "PostgreSQL" ] }
       end
     end
 
@@ -154,7 +154,7 @@ describe ManageEngine::AppManager::Server do
       let(:manager_server) { FactoryGirl.build :server }
 
       it "should raise exception" do
-        expect{ manager_server.all_hosts }.to raise_error
+        expect{ manager_server.all_hosts_services }.to raise_error
       end
     end
   end

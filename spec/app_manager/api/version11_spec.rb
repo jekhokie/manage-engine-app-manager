@@ -35,13 +35,13 @@ describe ManageEngine::AppManager::Api::Version11 do
       end
     end
 
-    describe "hosts" do
+    describe "host_services" do
       let(:api)       { FactoryGirl.build :api, :version => "11" }
       let(:all_hosts) { File.open(File.dirname(__FILE__) + "/../../fixtures/all_hosts.xml", "r").read }
 
       it "returns a hash of service arrays" do
-        api.hosts(all_hosts).should == { "test-vm.local.host"  => [ "Service Monitoring", "Tomcat", "Tomcat", "JBoss", "PostgreSQL" ],
-                                         "test2-vm.local.host" => [ "Service Monitoring", "Tomcat", "PostgreSQL" ] }
+        api.hosts_services(all_hosts).should == { "test-vm.local.host"  => [ "Service Monitoring", "Tomcat", "Tomcat", "JBoss", "PostgreSQL" ],
+                                                  "test2-vm.local.host" => [ "Service Monitoring", "Tomcat", "PostgreSQL" ] }
       end
     end
   end

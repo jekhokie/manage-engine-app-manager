@@ -75,7 +75,7 @@ module ManageEngine
         return valid_response
       end
 
-      def all_hosts
+      def all_hosts_services
         begin
           can_connect?
 
@@ -83,7 +83,7 @@ module ManageEngine
             http.get(@api.host_path % { :api_key => self.api_key, :type => "all" })
           end
 
-          valid_response = @api.hosts(response.body)
+          valid_response = @api.hosts_services(response.body)
         rescue Exception => e
           raise e.message
         end

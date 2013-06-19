@@ -27,19 +27,19 @@ module ManageEngine
           return (!status[0].nil? and status[0].attr("response-code") == "4000")
         end
 
-        def hosts(response)
-          host_list = Hash.new
-          doc       = Nokogiri::XML response
+        def hosts_services(response)
+          host_services_list = Hash.new
+          doc                = Nokogiri::XML response
 
           doc.xpath("/AppManager-response/result/response/Server").each do |server_xml|
-            (host_list[server_xml.attr("Name")] = Array.new).tap do |server_monitors|
+            (host_services_list[server_xml.attr("Name")] = Array.new).tap do |server_monitors|
               server_xml.xpath("./Service").each_with_index do |service_xml, i|
                 server_monitors.push service_xml.attr("TYPE")
               end
             end
           end
 
-          host_list
+          host_services_list
         end
       end
     end
