@@ -92,4 +92,42 @@ describe ManageEngine::AppManager::Server do
       manager_server.root_url.should == "http://#{host}:#{port}/"
     end
   end
+
+  describe "can_connect?" do
+    let(:host)    { "my.host" }
+    let(:port)    { "9001" }
+    let(:api_key) { "abc123" }
+
+    describe "for a non-reachable server" do
+      let(:manager_server) { FactoryGirl.build :server }
+
+      it "should raise exception" do
+        expect{ manager_server.can_connect? }.to raise_error
+      end
+    end
+
+    describe "for valid connection credentials" do
+      let(:manager_server) { FactoryGirl.build :server, :host => host, :port => port, :api_version => "11", :api_key => api_key }
+
+      before :each do
+        FakeWeb.register_uri(:get, "http://#{host}:#{port}/AppManager/xml/ListDashboards?apikey=#{api_key}", :body => File.open(File.dirname(__FILE__) + "/../fixtures/valid_connect.xml", "r").read)
+      end
+
+      it "should return true" do
+        manager_server.can_connect?.should be_true
+      end
+    end
+
+    describe "for invalid connection credentials" do
+      let(:manager_server) { FactoryGirl.build :server, :host => host, :port => port, :api_version => "11", :api_key => "BOGUS" }
+
+      before :each do
+        FakeWeb.register_uri(:get, "http://#{host}:#{port}/AppManager/xml/ListDashboards?apikey=#{api_key}", :body => File.open(File.dirname(__FILE__) + "/../fixtures/invalid_connect.xml", "r").read)
+      end
+
+      it "should return true" do
+        expect{ manager_server.can_connect? }.to raise_error
+      end
+    end
+  end
 end

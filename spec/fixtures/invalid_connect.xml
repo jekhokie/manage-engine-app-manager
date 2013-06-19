@@ -1,0 +1,9 @@
+<AppManager-response uri="/AppManager/xml/ListDashboards">
+  <result>
+    <response response-code="4004">
+      <message>
+        The specified API key [ f1e7b9f58d01ca274dbbd56bf82b2c ] in the request is invalid. Kindly login to Application Manager and check for the key in REST API key in Admin tab.
+      </message>
+    </response>
+  </result>
+</AppManager-response>

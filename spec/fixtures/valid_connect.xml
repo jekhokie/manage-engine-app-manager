@@ -1,0 +1,11 @@
+<AppManager-response uri="/AppManager/xml/ListDashboards">
+  <result>
+    <response response-code="4000">
+      <Dashboard DashboardId="10000001" DashboardName="Default Dashboard">
+        <Widget WidgetName="Infrastructure Snapshot" WidgetId="10000002" WidgetURL="/MyPage.do?method=getWidget&pageid=10000001&widgetid=10000002"/>
+        <Widget WidgetName="Recent 10 Alarms" WidgetId="10000003" WidgetURL="/MyPage.do?method=getWidget&pageid=10000001&widgetid=10000003"/>
+        <Widget WidgetName="Monitor Groups" WidgetId="10000001" WidgetURL="/MyPage.do?method=getWidget&pageid=10000001&widgetid=10000001"/>
+      </Dashboard>
+    </response>
+  </result>
+</AppManager-response>
