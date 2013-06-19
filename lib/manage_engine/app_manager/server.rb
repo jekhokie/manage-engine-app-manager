@@ -62,8 +62,6 @@ module ManageEngine
       end
 
       def can_connect?
-        connect_url = root_url + (@api.connect_path % { :api_key => self.api_key })
-
         begin
           response = Net::HTTP.start(self.host, self.port) do |http|
             http.get(@api.connect_path % { :api_key => self.api_key })
@@ -75,6 +73,20 @@ module ManageEngine
         end
 
         return valid_response
+      end
+
+      def all_hosts
+        begin
+          can_connect?
+
+          response = Net::HTTP.start(self.host, self.port) do |http|
+            http.get(@api.host_path % { :api_key => self.api_key, :type => "all" })
+          end
+
+          valid_response = @api.hosts(response.body)
+        rescue Exception => e
+          raise e.message
+        end
       end
     end
   end
