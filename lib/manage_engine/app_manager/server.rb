@@ -92,6 +92,15 @@ module ManageEngine
       def monitored_hosts
         self.monitored_hosts_services.keys
       end
+
+      def monitored_services_for(host)
+        host_service_hash = self.monitored_hosts_services
+
+        raise "No Hosts Being Monitored"    if host_service_hash.empty?
+        raise "Non-Monitored Host: #{host}" if (host_hash = host_service_hash[host]).empty?
+
+        host_hash.uniq
+      end
     end
   end
 end
