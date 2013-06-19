@@ -41,6 +41,10 @@ module ManageEngine
 
           host_services_list
         end
+
+        def hosts(response)
+          self.hosts_services(response).keys
+        end
       end
     end
   end
