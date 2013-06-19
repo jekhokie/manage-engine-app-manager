@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AppManager-response uri="/AppManager/xml/ListServer">
+  <result>
+    <response response-code="4000" />
+  </result>
+</AppManager-response>
