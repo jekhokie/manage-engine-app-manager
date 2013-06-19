@@ -75,7 +75,7 @@ module ManageEngine
         return valid_response
       end
 
-      def all_hosts_services
+      def monitored_hosts_services
         begin
           can_connect?
 
@@ -89,8 +89,8 @@ module ManageEngine
         end
       end
 
-      def all_hosts
-        self.all_hosts_services.keys
+      def monitored_hosts
+        self.monitored_hosts_services.keys
       end
     end
   end
