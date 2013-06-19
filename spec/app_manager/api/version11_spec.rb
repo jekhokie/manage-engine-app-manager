@@ -44,5 +44,14 @@ describe ManageEngine::AppManager::Api::Version11 do
                                                   "test2-vm.local.host" => [ "Service Monitoring", "Tomcat", "PostgreSQL" ] }
       end
     end
+
+    describe "hosts" do
+      let(:api)       { FactoryGirl.build :api, :version => "11" }
+      let(:all_hosts) { File.open(File.dirname(__FILE__) + "/../../fixtures/all_hosts.xml", "r").read }
+
+      it "returns an array of hosts being monitored" do
+        api.hosts(all_hosts).should == [ "test-vm.local.host", "test2-vm.local.host" ]
+      end
+    end
   end
 end
