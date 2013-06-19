@@ -1,3 +1,5 @@
+require "net/http"
+
 module ManageEngine
   module AppManager
     class Server
@@ -57,6 +59,22 @@ module ManageEngine
 
       def root_url
         "http://#{self.host}:#{self.port}/"
+      end
+
+      def can_connect?
+        connect_url = root_url + (@api.connect_path % { :api_key => self.api_key })
+
+        begin
+          response = Net::HTTP.start(self.host, self.port) do |http|
+            http.get(@api.connect_path % { :api_key => self.api_key })
+          end
+
+          valid_response = @api.connect_response_valid?(response.body)
+        rescue Exception => e
+          raise e.message
+        end
+
+        return valid_response
       end
     end
   end
