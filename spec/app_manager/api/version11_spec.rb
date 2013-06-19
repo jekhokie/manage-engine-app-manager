@@ -53,5 +53,28 @@ describe ManageEngine::AppManager::Api::Version11 do
         api.hosts(all_hosts).should == [ "test-vm.local.host", "test2-vm.local.host" ]
       end
     end
+
+    describe "host_services" do
+      let(:api)       { FactoryGirl.build :api, :version => "11" }
+      let(:all_hosts) { File.open(File.dirname(__FILE__) + "/../../fixtures/all_hosts.xml", "r").read }
+
+      describe "for no monitored hosts" do
+        it "raises an error" do
+          expect{ api.host_services("bogusVM", "ABC") }.to raise_error
+        end
+      end
+
+      describe "for an unknown host" do
+        it "raises an error" do
+          expect{ api.host_services("bogusVM", all_hosts) }.to raise_error
+        end
+      end
+
+      describe "for a known host" do
+        it "returns an array of monitored services" do
+          api.host_services("test-vm.local.host", all_hosts).should == [ "Service Monitoring", "Tomcat", "JBoss", "PostgreSQL" ]
+        end
+      end
+    end
   end
 end
