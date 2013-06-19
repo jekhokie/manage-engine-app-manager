@@ -130,4 +130,32 @@ describe ManageEngine::AppManager::Server do
       end
     end
   end
+
+  describe "all_hosts" do
+    let(:host)           { "my.host" }
+    let(:port)           { "9001" }
+    let(:api_key)        { "abc123" }
+    let(:manager_server) { FactoryGirl.build :server, :host => host, :port => port, :api_version => "11", :api_key => api_key }
+
+    describe "for an instance with servers being monitored" do
+      before :each do
+        # required for can_connect?
+        FakeWeb.register_uri(:get, "http://#{host}:#{port}/AppManager/xml/ListDashboards?apikey=#{api_key}", :body => File.open(File.dirname(__FILE__) + "/../fixtures/valid_connect.xml", "r").read)
+        FakeWeb.register_uri(:get, "http://#{host}:#{port}/AppManager/xml/ListServer?apikey=#{api_key}&type=all", :body => File.open(File.dirname(__FILE__) + "/../fixtures/all_hosts.xml", "r").read)
+      end
+
+      it "returns a hash of service arrays" do
+        manager_server.all_hosts.should == { "test-vm.local.host"  => [ "Service Monitoring", "Tomcat", "Tomcat", "JBoss", "PostgreSQL" ],
+                                             "test2-vm.local.host" => [ "Service Monitoring", "Tomcat", "PostgreSQL" ] }
+      end
+    end
+
+    describe "for a non-reachable server" do
+      let(:manager_server) { FactoryGirl.build :server }
+
+      it "should raise exception" do
+        expect{ manager_server.all_hosts }.to raise_error
+      end
+    end
+  end
 end
