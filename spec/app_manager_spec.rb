@@ -8,7 +8,7 @@ describe ManageEngine::AppManager do
   end
 
   describe "new" do
-    it "should return a new Server instance" do
+    it "returns a new Server instance" do
       ManageEngine::AppManager.new(:host => "http://www.google.com/", :api_key => "12490y51ti3g").should be_instance_of(ManageEngine::AppManager::Server)
     end
   end
