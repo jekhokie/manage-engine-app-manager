@@ -101,7 +101,7 @@ describe ManageEngine::AppManager::Server do
     describe "for a non-reachable server" do
       let(:manager_server) { FactoryGirl.build :server }
 
-      it "should raise exception" do
+      it "raises an exception" do
         expect{ manager_server.can_connect? }.to raise_error
       end
     end
@@ -113,7 +113,7 @@ describe ManageEngine::AppManager::Server do
         FakeWeb.register_uri(:get, "http://#{host}:#{port}/AppManager/xml/ListDashboards?apikey=#{api_key}", :body => File.open(File.dirname(__FILE__) + "/../fixtures/valid_connect.xml", "r").read)
       end
 
-      it "should return true" do
+      it "returns true" do
         manager_server.can_connect?.should be_true
       end
     end
@@ -125,7 +125,7 @@ describe ManageEngine::AppManager::Server do
         FakeWeb.register_uri(:get, "http://#{host}:#{port}/AppManager/xml/ListDashboards?apikey=#{api_key}", :body => File.open(File.dirname(__FILE__) + "/../fixtures/invalid_connect.xml", "r").read)
       end
 
-      it "should return true" do
+      it "returns true" do
         expect{ manager_server.can_connect? }.to raise_error
       end
     end
@@ -153,7 +153,7 @@ describe ManageEngine::AppManager::Server do
     describe "for a non-reachable server" do
       let(:manager_server) { FactoryGirl.build :server }
 
-      it "should raise exception" do
+      it "raises an exception" do
         expect{ manager_server.monitored_hosts_services }.to raise_error
       end
     end
@@ -180,7 +180,7 @@ describe ManageEngine::AppManager::Server do
     describe "for a non-reachable server" do
       let(:manager_server) { FactoryGirl.build :server }
 
-      it "should raise exception" do
+      it "raises an exception" do
         expect{ manager_server.monitored_hosts }.to raise_error
       end
     end
@@ -207,7 +207,7 @@ describe ManageEngine::AppManager::Server do
     describe "for a non-reachable server" do
       let(:manager_server) { FactoryGirl.build :server }
 
-      it "should raise exception" do
+      it "raises an exception" do
         expect{ manager_server.monitored_services_for("test-vm.local.host") }.to raise_error
       end
     end
@@ -219,8 +219,83 @@ describe ManageEngine::AppManager::Server do
         FakeWeb.register_uri(:get, "http://#{host}:#{port}/AppManager/xml/ListServer?apikey=#{api_key}&type=all", :body => File.open(File.dirname(__FILE__) + "/../fixtures/no_hosts.xml", "r").read)
       end
 
-      it "should raise exception" do
+      it "raises an exception" do
         expect{ manager_server.monitored_services_for("test-vm.local.host") }.to raise_error
+      end
+    end
+  end
+
+  describe "has_monitored_service?" do
+    let(:host)           { "my.host" }
+    let(:port)           { "9001" }
+    let(:api_key)        { "abc123" }
+    let(:manager_server) { FactoryGirl.build :server, :host => host, :port => port, :api_version => "11", :api_key => api_key }
+
+    describe "for a host not having service monitored" do
+      before :each do
+        # required for can_connect?
+        FakeWeb.register_uri(:get, "http://#{host}:#{port}/AppManager/xml/ListDashboards?apikey=#{api_key}", :body => File.open(File.dirname(__FILE__) + "/../fixtures/valid_connect.xml", "r").read)
+        FakeWeb.register_uri(:get, "http://#{host}:#{port}/AppManager/xml/ListServer?apikey=#{api_key}&type=all", :body => File.open(File.dirname(__FILE__) + "/../fixtures/all_hosts.xml", "r").read)
+      end
+
+      it "returns false" do
+        manager_server.has_monitored_service?("test-vm.local.host", "Bogus Service").should == false
+      end
+    end
+
+    describe "for a host having a service monitored" do
+      before :each do
+        # required for can_connect?
+        FakeWeb.register_uri(:get, "http://#{host}:#{port}/AppManager/xml/ListDashboards?apikey=#{api_key}", :body => File.open(File.dirname(__FILE__) + "/../fixtures/valid_connect.xml", "r").read)
+        FakeWeb.register_uri(:get, "http://#{host}:#{port}/AppManager/xml/ListServer?apikey=#{api_key}&type=all", :body => File.open(File.dirname(__FILE__) + "/../fixtures/all_hosts.xml", "r").read)
+      end
+
+      it "returns true" do
+        manager_server.has_monitored_service?("test-vm.local.host", "Tomcat").should == true
+      end
+    end
+
+    describe "for a host having a service monitored case insensitive" do
+      before :each do
+        # required for can_connect?
+        FakeWeb.register_uri(:get, "http://#{host}:#{port}/AppManager/xml/ListDashboards?apikey=#{api_key}", :body => File.open(File.dirname(__FILE__) + "/../fixtures/valid_connect.xml", "r").read)
+        FakeWeb.register_uri(:get, "http://#{host}:#{port}/AppManager/xml/ListServer?apikey=#{api_key}&type=all", :body => File.open(File.dirname(__FILE__) + "/../fixtures/all_hosts.xml", "r").read)
+      end
+
+      it "returns true" do
+        manager_server.has_monitored_service?("test-vm.local.host", "tomcat").should == true
+      end
+    end
+
+    describe "for a non-reachable server" do
+      let(:manager_server) { FactoryGirl.build :server }
+
+      it "raises an exception" do
+        expect{ manager_server.has_monitored_service?("test-vm.local.host", "Tomcat") }.to raise_error
+      end
+    end
+
+    describe "for a non-monitored host" do
+      before :each do
+        # required for can_connect?
+        FakeWeb.register_uri(:get, "http://#{host}:#{port}/AppManager/xml/ListDashboards?apikey=#{api_key}", :body => File.open(File.dirname(__FILE__) + "/../fixtures/valid_connect.xml", "r").read)
+        FakeWeb.register_uri(:get, "http://#{host}:#{port}/AppManager/xml/ListServer?apikey=#{api_key}&type=all", :body => File.open(File.dirname(__FILE__) + "/../fixtures/all_hosts.xml", "r").read)
+      end
+
+      it "raises an exception" do
+        expect{ manager_server.has_monitored_service?("BOGUS.HOST", "Tomcat") }.to raise_error
+      end
+    end
+
+    describe "for an instance that is not monitoring any servers" do
+      before :each do
+        # required for can_connect?
+        FakeWeb.register_uri(:get, "http://#{host}:#{port}/AppManager/xml/ListDashboards?apikey=#{api_key}", :body => File.open(File.dirname(__FILE__) + "/../fixtures/valid_connect.xml", "r").read)
+        FakeWeb.register_uri(:get, "http://#{host}:#{port}/AppManager/xml/ListServer?apikey=#{api_key}&type=all", :body => File.open(File.dirname(__FILE__) + "/../fixtures/no_hosts.xml", "r").read)
+      end
+
+      it "raises an exception" do
+        expect{ manager_server.has_monitored_service?("test-vm.local.host", "Tomcat") }.to raise_error
       end
     end
   end
