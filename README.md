@@ -33,6 +33,10 @@ Or install it yourself as:
     # retrieve a listing of all currently-monitored hosts and their respective services being monitored
     server.monitored_hosts_services   # { 'my.host.1' => [ 'Tomcat', 'JBoss', 'PostgreSQL' ], 'my.host.2' => [ 'PostgreSQL' ] }
 
+    # check whether a host has a service currently being monitored -
+    # note that the service name is case-insensitive
+    server.has_monitored_service?("my.host.1", "Tomcat")    # true
+
 ## Contributing
 
 1. Fork it
