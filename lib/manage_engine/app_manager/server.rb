@@ -101,6 +101,10 @@ module ManageEngine
 
         host_hash.uniq
       end
+
+      def has_monitored_service?(host, service)
+        self.monitored_services_for(host).any?{ |host_service| host_service.casecmp(service) == 0 }
+      end
     end
   end
 end
