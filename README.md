@@ -1,4 +1,4 @@
-# ManageEngine::AppManager
+# ManageEngine::AppManager [![Build Status](https://travis-ci.org/jekhokie/manage-engine-app-manager.png)](https://travis-ci.org/jekhokie/manage-engine-app-manager)
 
 Ruby Interface to the ManageEngine ApplicationsManager
 
